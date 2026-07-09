@@ -136,9 +136,9 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         const BOT_IMAGE = userConfig?.BOT_IMAGE || userConfig?.BOT_MEDIA_URL || config.BOT_IMAGE || config.BOT_MEDIA_URL;
         
         // Main menu text with sidebar design from Menu 2
-        let dec = `▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
+        let dec = `▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 ➤  ${BOT_NAME}
-▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
+▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 
 ▰▰▰❰ 🤖 ʙᴏᴛ ɪɴғᴏ ❱▰▰▰
 ➤ 👑 ${toSmallCaps('Owner')}: ${OWNER_NAME}
@@ -147,7 +147,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ➤ 📦 ${toSmallCaps('Prefix')}: ${PREFIX}
 ➤ ⚙️ ${toSmallCaps('Mode')}: ${MODE}
 ➤ 🏷️ ${toSmallCaps('Version')}: ${VERSION}
-▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
+▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 ${menuSections}
 
 > ${DESCRIPTION || ''}`;
