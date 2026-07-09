@@ -23,23 +23,19 @@ const toSmallCaps = (text) => {
     return text.split('').map(char => smallCapsMap[char] || char).join('');
 };
 
-// Format category with Fire/Arrow Style
+// Format category with sidebar design from Menu 2
 const formatCategory = (category, cmds) => {
     // Filter out commands with empty or undefined patterns
     const validCmds = cmds.filter(cmd => cmd.pattern && cmd.pattern.trim() !== '');
-
+    
     if (validCmds.length === 0) return ''; // Skip empty categories
-
-    let title = `
-▰▰▰ ${toSmallCaps(category.toUpperCase())} ▰▰▰
-`;
+    
+    let title = `\n▰▰▰❰ ${toSmallCaps(category.toUpperCase())} ❱▰▰▰\n║\n`;
     let body = validCmds.map(cmd => {
         const commandName = cmd.pattern || '';
-        return `  ➤ ${toSmallCaps(commandName)}`;
-    }).join('
-');
-    let footer = `
-▰▰▰▰▰▰▰▰▰▰▰▰▰`;
+        return `➤ ─ ${toSmallCaps(commandName)}`;
+    }).join('\n');
+    let footer = `\n➤\n▰▰▰▰▰▰▰▰▰▰▰▰▰`;
     return `${title}${body}${footer}`;
 };
 
@@ -141,16 +137,16 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         
         // Main menu text with sidebar design from Menu 2
         let dec = `▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
-  ⚡ ${BOT_NAME}
+➤  ${BOT_NAME}
 ▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 
-▰▰▰ 🤖 ʙᴏᴛ ɪɴғᴏ ▰▰▰
-  👑 ${toSmallCaps('Owner')}: ${OWNER_NAME}
-  📜 ${toSmallCaps('Commands')}: ${totalCommands}
-  ⏱️ ${toSmallCaps('Runtime')}: ${runtime(process.uptime())}
-  📦 ${toSmallCaps('Prefix')}: ${PREFIX}
-  ⚙️ ${toSmallCaps('Mode')}: ${MODE}
-  🏷️ ${toSmallCaps('Version')}: ${VERSION}
+▰▰▰❰ 🤖 ʙᴏᴛ ɪɴғᴏ ❱▰▰▰
+➤ 👑 ${toSmallCaps('Owner')}: ${OWNER_NAME}
+➤ 📜 ${toSmallCaps('Commands')}: ${totalCommands}
+➤ ⏱️ ${toSmallCaps('Runtime')}: ${runtime(process.uptime())}
+➤ 📦 ${toSmallCaps('Prefix')}: ${PREFIX}
+➤ ⚙️ ${toSmallCaps('Mode')}: ${MODE}
+➤ 🏷️ ${toSmallCaps('Version')}: ${VERSION}
 ▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 ${menuSections}
 
