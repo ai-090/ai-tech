@@ -15,7 +15,7 @@ let currentStyleIndex = 0;
 
 cmd({
     pattern: "ping",
-    alias: ["speed","pong"],
+    alias: ["speed","pong1"],
     use: '.ping',
     desc: "Check bot's response time.",
     category: "main",
