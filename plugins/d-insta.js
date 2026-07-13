@@ -1,96 +1,72 @@
+// plugins/download.js - ESM Version
 import { fileURLToPath } from 'url';
-import path from 'path';
 import { cmd } from '../command.js';
-import axios from 'axios';
 import config from '../config.js';
+import axios from 'axios';
+import yts from 'yt-search';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { File } from 'megajs';
+import converter from '../lib/converter.js';
+
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+// Helper function to extract video ID
+function getVideoId(url) {
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    return match ? match[1] : null;
+}
+
 
 cmd({
     pattern: "instagram",
-    alias: ["ig", "instadl", "insta"],
-    desc: "Download Instagram videos and send them on WhatsApp",
-    category: "downloader",
-    react: "🎥",
+    alias: ["igdl", "ig", "instadl"],
+    react: '📥',
+    desc: "Download videos from Instagram (API v5)",
+    category: "download",
+    use: ".igdl2 <Instagram video URL>",
     filename: __filename
-},
-async (conn, mek, m, { from, q, reply, react }) => {
+}, async (conn, mek, m, { from, reply, args, userConfig }) => {
     try {
-
-        // Check URL
-        if (!q) {
-            return reply(
-                "❌ Please provide an Instagram Reel/Post URL.\n\nExample:\n.instagram https://www.instagram.com/reel/xxxxx/"
-            );
+        const igUrl = args[0];
+        if (!igUrl || !igUrl.includes("instagram.com")) {
+            return reply('❌ Please provide a valid Instagram video URL.\n\nExample:\n.igdl2 https://instagram.com/reel/...');
         }
 
-        // React loading
-        await react("⬇️");
+        // Get DESCRIPTION from userConfig if available, otherwise use config.DESCRIPTION
+        const DESCRIPTION = userConfig?.DESCRIPTION || config.DESCRIPTION || "";
 
-        // New API URL
-        const apiUrl = `https://api.nexray.eu.cc/downloader/instagram?url=${encodeURIComponent(q)}`;
+        await conn.sendMessage(from, { react: { text: '⏳', key: m.key } });
 
-        // Fetch API Data
-        const { data } = await axios.get(apiUrl);
+        const apiUrl = `https://jawad-tech.vercel.app/downloader?url=${encodeURIComponent(igUrl)}`;
+        const response = await axios.get(apiUrl);
+        const data = response.data;
 
-        // Validate response
-        if (!data || !data.status || !data.result || !data.result.length) {
-            await react("❌");
-            return reply("❌ Failed to fetch Instagram media. Try another link.");
+        if (!data.status || !data.result || !Array.isArray(data.result)) {
+            return reply('❌ Unable to fetch the video. Please check the URL and try again.');
         }
 
-        // Get first media
-        const media = data.result[0];
+        const videoUrl = data.result[0];
+        if (!videoUrl) return reply("❌ No video found in the response.");
 
-        // Validate media URL
-        if (!media.url) {
-            await react("❌");
-            return reply("❌ Media URL not found.");
-        }
+        const metadata = data.metadata || {};
+        const author = metadata.author || "Unknown";
+        const caption = metadata.caption ? metadata.caption.slice(0, 300) + "..." : "No caption provided.";
+        const likes = metadata.like || 0;
+        const comments = metadata.comment || 0;
 
-        // Send info message
-        await reply(
-            `🎬 *INSTAGRAM DOWNLOADER*\n\n` +
-            `📦 *Type:* ${media.type || 'Unknown'}\n` +
-            `🖼 *Thumbnail:* ${media.thumbnail ? 'Available' : 'Not Found'}\n` +
-            `⚡ *Response Time:* ${data.response_time || 'Fast'}\n\n` +
-            `📥 Downloading media... Please wait.`
-        );
+        await reply('Downloading Instagram video...Please wait.📥');
 
-        // Download media buffer
-        const response = await axios.get(media.url, {
-            responseType: 'arraybuffer'
-        });
+        await conn.sendMessage(from, {
+            video: { url: videoUrl },
+            caption: `📥 *Instagram Reel Downloader*\n👤 *Author:* ${author}\n💬 *Caption:* ${caption}\n❤️ *Likes:* ${likes} | 💭 *Comments:* ${comments}\n\n> ${DESCRIPTION}`
+        }, { quoted: mek });
 
-        // Send video
-        if (media.type === "video") {
-
-            await conn.sendMessage(from, {
-                video: Buffer.from(response.data),
-                mimetype: 'video/mp4',
-                caption: `> *IT'S ${config.BOT_NAME}*`
-            }, { quoted: mek });
-
-        } else {
-
-            // Send image if image type
-            await conn.sendMessage(from, {
-                image: Buffer.from(response.data),
-                caption: `> *IT'S ${config.BOT_NAME}*`
-            }, { quoted: mek });
-        }
-
-        // Success reaction
-        await react("✅");
-
-    } catch (e) {
-
-        console.log("Instagram Downloader Error:", e);
-
-        await react("❌");
-
-        reply(
-            "❌ An error occurred while downloading Instagram media.\nPlease try again later."
-        );
+        await conn.sendMessage(from, { react: { text: '✅', key: m.key } });
+    } catch (error) {
+        console.error('IGDL2 Error:', error);
+        reply('❌ Failed to download the Instagram video. Please try again later.');
+        await conn.sendMessage(from, { react: { text: '❌', key: m.key } });
     }
 });
