@@ -31,8 +31,8 @@ cmd({
 
 // ==================== MUTE COMMAND ====================
 cmd({
-    pattern: "mute",
-    alias: ["close", "lock"],
+    pattern: "close",
+    alias: ["mute", "lock"],
     desc: "Mute the group (admins only)",
     category: "group",
     react: "🔇",
