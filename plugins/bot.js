@@ -6,7 +6,7 @@ const __dirname = path.dirname(__filename);
 
 cmd({
     pattern: "bot",
-    alias: ["start", "hi", "hello"],
+    alias: ["start", "hx", "hello"],
     desc: "Check if bot is active",
     react: "✅",
     category: "main",
