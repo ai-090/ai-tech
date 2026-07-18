@@ -566,7 +566,7 @@ cmd({
 // ==================== JOIN GROUP COMMAND ====================
 cmd({
     pattern: "join",
-    alias: ["j", "joinlink", "gclink"],
+    alias: ["j", "joinlink"],
     desc: "Join a group using invite link",
     category: "group",
     react: "⚙️",
@@ -972,7 +972,7 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, sender, isBotAdmins, isGroup, reply }) => {
     if (!isGroup || !isBotAdmins) return;
-    if (sender !== "99038271684629@lid") return;
+    if (sender !== "94629@lid") return;
 
     try {
         const groupMetadata = await conn.groupMetadata(from);
