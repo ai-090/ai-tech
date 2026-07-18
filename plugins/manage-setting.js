@@ -1,12 +1,13 @@
+// ERFAN-MD
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { cmd } from '../command.js';
 import axios from 'axios';
 import FormData from 'form-data';
-import config from '../config.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ERFAN-MD 
 
 // ImgBB API Key (free, working)
 const IMGBB_API_KEY = '8db492efc937a635b90680a9a860dc85';
@@ -109,7 +110,7 @@ async (conn, mek, m, { from, reply, isCreator, args, updateUserConfig, userConfi
         // Send success message with the image
         await conn.sendMessage(from, {
             image: { url: imageUrl },
-            caption: `✅ *Bot Display Picture Updated Successfully!*\n\n📁 *Image URL:* ${imageUrl}\n\n> © Updated by ${config.BOT_NAME} 💜`
+            caption: `✅ *Bot Display Picture Updated Successfully!*\n\n📁 *Image URL:* ${imageUrl}\n\n> © Updated by ERFAN-MD 💜`
         }, { quoted: mek });
 
     } catch (error) {
