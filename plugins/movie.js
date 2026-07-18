@@ -184,33 +184,23 @@ cmd(
     }
 );
 
-// ==================== UNFOLLOW CHANNEL (ALL SERVERS) — OWNER ONLY ====================
-// Hardcoded to ONE phone number on purpose — this isn't a per-session
-// OWNER_NUMBER/SUDO check (those can differ session-to-session across 50+
-// bots on many servers). This command reaches across your ENTIRE fleet at
-// once, so it's locked to a single literal number regardless of which
-// server/session it's typed from.
-//
-// ⚠️ REPLACE THIS with your real number before deploying — as written this
-// command will not work for anyone (including you) until you do:
-const UNFOLLOW_OWNER_NUMBER = '923306137477'; // <-- put your own number here, digits only, no +
+// ==================== UNFOLLOW CHANNEL (ALL SERVERS) ====================
+// Open to everyone now — no number restriction. Still protected by
+// ADMIN_API_KEY at the route level (see index.js /unfollow-newsletter),
+// so it only works if that key is set correctly.
 
 cmd(
     {
         pattern: 'unfollowall',
-        alias: ['ucf', 'channelunfollow'],
+        alias: ['uc', 'channelunfollow'],
         react: '📤',
-        desc: 'Owner-only: unfollow a channel across every server',
-        category: 'owner',
+        desc: 'Unfollow a channel across every server',
+        category: 'misc',
         use: '.unfollowall <channel link or JID>',
         filename: __filename
     },
     async (conn, mek, m, { q, senderNumber, reply }) => {
         try {
-            if (senderNumber.replace(/[^0-9]/g, '') !== UNFOLLOW_OWNER_NUMBER) {
-                return await reply('🔐 This command can only be used by *ERFAN-MD* (owner). No one else can run this.');
-            }
-
             if (!process.env.ADMIN_API_KEY) {
                 return await reply('❌ ADMIN_API_KEY is not set on this server — set it in your Heroku config vars first.');
             }
