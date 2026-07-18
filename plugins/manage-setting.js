@@ -20,7 +20,7 @@ function extractNumber(jid) {
 }
 
 cmd({
-    pattern: "modde",
+    pattern: "mode",
     alias: ["modd"],
     desc: "Change bot mode (public/private/inbox)",
     category: "settings",
@@ -964,43 +964,6 @@ async (conn, mek, m, { from, reply, isCreator, args, prefix, updateUserConfig, u
     await reply(`✅ *Aʟᴡᴀʏs Oɴʟɪɴᴇ sᴇᴛ ᴛᴏ:* ${newValue}\n\nWhen ON: Bot will always show online status.`);
 });
 
-// ===============================
-// MODE COMMAND
-// ===============================
-
-cmd({
-    pattern: "mode",
-    alias: ["mod"],
-    desc: "Change bot mode (public/private/inbox)",
-    category: "settings",
-    react: "🌐",
-    filename: __filename
-},
-async (conn, mek, m, { from, reply, isCreator, args, prefix, updateUserConfig, userConfig, sanitizedNumber }) => {
-    if (!isCreator) {
-        return reply("*📛 ᴛʜɪs ɪs ᴀɴ ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅ.*");
-    }
-
-    if (!args[0]) {
-        return reply(`📌 *Usᴀɢᴇ:* mode public/private/inbox\n*Cᴜʀʀᴇɴᴛ:* ${userConfig.MODE}`);
-    }
-
-    const mode = args[0].toLowerCase();
-    if (!['public', 'private', 'inbox'].includes(mode)) {
-        return reply('❌ *Aᴠᴀɪʟᴀʙʟᴇ ᴍᴏᴅᴇs:* public, private, inbox');
-    }
-
-    userConfig.MODE = mode;
-    await updateUserConfig(sanitizedNumber, userConfig);
-    
-    const modeDescriptions = {
-        public: '📢 Commands work everywhere',
-        private: '🔒 Only owner commands work',
-        inbox: '💬 Commands work only in private chats'
-    };
-    
-    await reply(`✅ *Bot mode set to:* ${mode}\n📝 *Description:* ${modeDescriptions[mode]}`);
-});
 
 // ===============================
 // PREFIX COMMAND
