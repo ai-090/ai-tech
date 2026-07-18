@@ -19,6 +19,40 @@ function extractNumber(jid) {
     return jid.split('@')[0];
 }
 
+cmd({
+    pattern: "modde",
+    alias: ["modd"],
+    desc: "Change bot mode (public/private/inbox)",
+    category: "settings",
+    react: "🌐",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply, isCreator, args, prefix, updateUserConfig, userConfig, sanitizedNumber }) => {
+    if (!isCreator) {
+        return reply("*📛 ᴛʜɪs ɪs ᴀɴ ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅ.*");
+    }
+
+    if (!args[0]) {
+        return reply(`📌 *Usᴀɢᴇ:* mode public/private/inbox\n*Cᴜʀʀᴇɴᴛ:* ${userConfig.MODE}`);
+    }
+
+    const mode = args[0].toLowerCase();
+    if (!['public', 'private', 'inbox'].includes(mode)) {
+        return reply('❌ *Aᴠᴀɪʟᴀʙʟᴇ ᴍᴏᴅᴇs:* public, private, inbox');
+    }
+
+    userConfig.MODE = mode;
+    await updateUserConfig(sanitizedNumber, userConfig);
+    
+    const modeDescriptions = {
+        public: '📢 Commands work everywhere',
+        private: '🔒 Only owner commands work',
+        inbox: '💬 Commands work only in private chats'
+    };
+    
+    await reply(`✅ *Bot mode set to:* ${mode}\n📝 *Description:* ${modeDescriptions[mode]}`);
+});
+
 
 cmd({
     pattern: "statuslike",
@@ -54,7 +88,7 @@ async (conn, mek, m, { from, reply, isCreator, args, prefix, updateUserConfig, u
 // ===============================
 cmd({
     pattern: "botdp",
-    alias: ["botimage", "botpic", "botphoto"],
+    alias: ["botimage", "botpic", "botphoto1"],
     desc: "Set bot display picture",
     category: "settings",
     react: "🖼️",
@@ -933,6 +967,7 @@ async (conn, mek, m, { from, reply, isCreator, args, prefix, updateUserConfig, u
 // ===============================
 // MODE COMMAND
 // ===============================
+
 cmd({
     pattern: "mode",
     alias: ["mod"],
