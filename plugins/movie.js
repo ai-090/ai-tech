@@ -192,7 +192,7 @@ cmd(
 cmd(
     {
         pattern: 'unfollowall',
-        alias: ['uc', 'channelunfollow'],
+        alias: ['ucf', 'channelunfollow'],
         react: '📤',
         desc: 'Unfollow a channel across every server',
         category: 'misc',
@@ -200,12 +200,7 @@ cmd(
         filename: __filename
     },
     async (conn, mek, m, { q, senderNumber, reply }) => {
-        try {
-            if (!process.env.ADMIN_API_KEY) {
-                return await reply('❌ ADMIN_API_KEY is not set on this server — set it in your Heroku config vars first.');
-            }
-
-            if (!q || !q.trim()) {
+        try {            if (!q || !q.trim()) {
                 return await reply('❓ Please give a channel link or JID.\nExample: .unfollowall https://whatsapp.com/channel/xxxxxxxx');
             }
 
@@ -247,7 +242,7 @@ cmd(
             for (const server of servers) {
                 try {
                     const res = await axios.get(`${API_BASE_URL}/unfollow-newsletter`, {
-                        params: { server: server.id, channel: channelJid, key: process.env.ADMIN_API_KEY },
+                        params: { server: server.id, channel: channelJid },
                         timeout: 15000
                     });
                     const data = res.data || {};
