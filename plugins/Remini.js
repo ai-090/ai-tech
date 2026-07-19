@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 cmd({
     pattern: "remini",
-    alias: ["enhance"],
+    alias: ["enhance1"],
     react: "🪄",
     desc: "Enhance image quality using Remini AI",
     category: "image",
